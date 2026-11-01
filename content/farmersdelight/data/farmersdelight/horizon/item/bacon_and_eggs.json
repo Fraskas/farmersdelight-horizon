@@ -1,0 +1,11 @@
+{
+  "template": "minecraft:stick",
+  "components": {
+    "minecraft:food": {
+      "nutrition": 10,
+      "saturation": 12.0
+    },
+    "minecraft:consumable": {}
+  },
+  "max_stack_size": 16
+}

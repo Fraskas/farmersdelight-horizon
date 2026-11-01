@@ -1,0 +1,11 @@
+{
+  "template": "minecraft:furnace",
+  "properties": {
+    "hardness": 0.5,
+    "explosion_resistance": 6.0,
+    "light": 0,
+    "requires_tool": false,
+    "friction": 0.6,
+    "map_color": 6
+  }
+}

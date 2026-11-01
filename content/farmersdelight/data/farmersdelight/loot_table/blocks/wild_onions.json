@@ -1,0 +1,70 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:alternatives",
+          "children": [
+            {
+              "type": "minecraft:item",
+              "name": "farmersdelight:wild_onions",
+              "condition": {
+                "ability": "shears_harvest",
+                "type": "neoforge:can_item_perform_ability"
+              }
+            },
+            {
+              "type": "minecraft:item",
+              "name": "farmersdelight:onion",
+              "modifier": [
+                {
+                  "type": "minecraft:explosion_decay"
+                },
+                {
+                  "enchantment": "minecraft:fortune",
+                  "formula": "minecraft:uniform_bonus_count",
+                  "parameters": {
+                    "bonusMultiplier": 2
+                  },
+                  "type": "minecraft:apply_bonus"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "rolls": 1.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:allium"
+        }
+      ],
+      "condition": {
+        "term": {
+          "ability": "shears_harvest",
+          "type": "neoforge:can_item_perform_ability"
+        },
+        "type": "minecraft:inverted"
+      },
+      "modifier": [
+        {
+          "add": false,
+          "count": {
+            "type": "minecraft:uniform",
+            "max": 3.0,
+            "min": 1.0
+          },
+          "type": "minecraft:set_count"
+        }
+      ]
+    }
+  ],
+  "random_sequence": "farmersdelight:blocks/wild_onions"
+}

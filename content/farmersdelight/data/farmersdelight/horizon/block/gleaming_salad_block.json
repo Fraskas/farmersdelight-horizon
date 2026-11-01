@@ -1,0 +1,11 @@
+{
+  "template": "minecraft:cake",
+  "properties": {
+    "hardness": 0.5,
+    "explosion_resistance": 0.5,
+    "light": 12,
+    "requires_tool": false,
+    "friction": 0.6,
+    "map_color": 13
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "template": "minecraft:stone",
+  "properties": {
+    "hardness": 1.0,
+    "explosion_resistance": 1.0,
+    "light": 0,
+    "requires_tool": false,
+    "friction": 0.6,
+    "map_color": 34,
+    "sounds": "minecraft:acacia_hanging_sign"
+  }
+}

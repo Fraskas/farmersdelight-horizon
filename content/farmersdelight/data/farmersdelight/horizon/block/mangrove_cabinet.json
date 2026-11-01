@@ -1,0 +1,12 @@
+{
+  "template": "minecraft:oak_fence_gate",
+  "properties": {
+    "hardness": 2.5,
+    "explosion_resistance": 2.5,
+    "light": 0,
+    "requires_tool": false,
+    "friction": 0.6,
+    "map_color": 13,
+    "sounds": "minecraft:oak_planks"
+  }
+}

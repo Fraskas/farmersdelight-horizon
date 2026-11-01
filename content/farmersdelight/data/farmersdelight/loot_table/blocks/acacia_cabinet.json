@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "rolls": 1.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "farmersdelight:acacia_cabinet",
+          "modifier": [
+            {
+              "source": "block_entity",
+              "include": [
+                "minecraft:custom_name"
+              ],
+              "type": "minecraft:copy_components"
+            }
+          ]
+        }
+      ],
+      "condition": {
+        "type": "minecraft:survives_explosion"
+      }
+    }
+  ],
+  "random_sequence": "farmersdelight:blocks/acacia_cabinet"
+}

@@ -1,0 +1,12 @@
+{
+  "template": "minecraft:wheat",
+  "properties": {
+    "hardness": 0.0,
+    "explosion_resistance": 0.0,
+    "light": 0,
+    "requires_tool": false,
+    "friction": 0.6,
+    "map_color": 28,
+    "sounds": "minecraft:grass_block"
+  }
+}

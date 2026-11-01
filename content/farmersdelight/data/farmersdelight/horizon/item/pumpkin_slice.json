@@ -1,0 +1,10 @@
+{
+  "template": "minecraft:stick",
+  "components": {
+    "minecraft:food": {
+      "nutrition": 3,
+      "saturation": 1.8000001
+    },
+    "minecraft:consumable": {}
+  }
+}

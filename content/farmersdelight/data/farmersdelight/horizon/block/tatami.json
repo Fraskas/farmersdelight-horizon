@@ -1,0 +1,11 @@
+{
+  "template": "minecraft:white_carpet",
+  "properties": {
+    "hardness": 0.8,
+    "explosion_resistance": 0.8,
+    "light": 0,
+    "requires_tool": false,
+    "friction": 0.6,
+    "map_color": 8
+  }
+}

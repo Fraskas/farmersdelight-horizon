@@ -1,0 +1,9 @@
+id = "farmersdelight"
+name = "Farmer's Delight (Horizon port)"
+version = "1.3.4-horizon.9d979ca"
+description = "Port of Farmer's Delight 1.3.4 by vectorwing (MIT) to Horizon: crops, cooking pot, stove, skillet, cutting board, food and more. Needs the Farmer's Delight native mod (farmersdelight_native). Works on Horizon Nightly 2026-10-31 (9d979ca)."
+authors = ["vectorwing (Farmer's Delight)", "Horizon port"]
+api = "0.2"
+side = "both"
+capabilities = ["registries"]
+namespaces = ["create"]

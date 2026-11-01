@@ -1,0 +1,68 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "rolls": 1.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:beetroot"
+        }
+      ],
+      "condition": {
+        "type": "minecraft:all_of",
+        "terms": [
+          {
+            "chance": 0.2,
+            "type": "minecraft:random_chance"
+          },
+          {
+            "term": {
+              "ability": "shears_harvest",
+              "type": "neoforge:can_item_perform_ability"
+            },
+            "type": "minecraft:inverted"
+          }
+        ]
+      }
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:alternatives",
+          "children": [
+            {
+              "type": "minecraft:item",
+              "name": "farmersdelight:wild_beetroots",
+              "condition": {
+                "ability": "shears_harvest",
+                "type": "neoforge:can_item_perform_ability"
+              }
+            },
+            {
+              "type": "minecraft:item",
+              "name": "minecraft:beetroot_seeds",
+              "modifier": [
+                {
+                  "type": "minecraft:explosion_decay"
+                },
+                {
+                  "enchantment": "minecraft:fortune",
+                  "formula": "minecraft:uniform_bonus_count",
+                  "parameters": {
+                    "bonusMultiplier": 2
+                  },
+                  "type": "minecraft:apply_bonus"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "farmersdelight:blocks/wild_beetroots"
+}

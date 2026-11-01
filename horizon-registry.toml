@@ -1,0 +1,4 @@
+name = "Farmer's Delight (Horizon port)"
+summary = "Port of Farmer's Delight 1.3.4 by vectorwing to Horizon. Works on Horizon Nightly 2026-10-31 (9d979ca)."
+authors = ["vectorwing (Farmer's Delight)", "Fraskas (Horizon port)"]
+license = "MIT"

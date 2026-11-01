@@ -1,0 +1,25 @@
+{
+  "template": "minecraft:stick",
+  "components": {
+    "minecraft:food": {
+      "nutrition": 6,
+      "saturation": 7.2000003
+    },
+    "minecraft:consumable": {
+      "on_consume_effects": [
+        {
+          "type": "minecraft:apply_effects",
+          "effects": [
+            {
+              "id": "minecraft:regeneration",
+              "duration": 100,
+              "amplifier": 0,
+              "show_icon": true
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "max_stack_size": 16
+}

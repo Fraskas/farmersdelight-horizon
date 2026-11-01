@@ -1,0 +1,90 @@
+{
+  "type": "minecraft:block",
+  "random_sequence": "farmersdelight:blocks/tomatoes",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "rolls": 1.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "farmersdelight:tomato"
+        }
+      ],
+      "condition": {
+        "block": "farmersdelight:tomatoes",
+        "properties": {
+          "age": "3"
+        },
+        "type": "minecraft:block_state_property"
+      },
+      "modifier": [
+        {
+          "add": false,
+          "count": {
+            "type": "minecraft:uniform",
+            "max": 2.0,
+            "min": 1.0
+          },
+          "type": "minecraft:set_count"
+        },
+        {
+          "enchantment": "minecraft:fortune",
+          "formula": "minecraft:uniform_bonus_count",
+          "parameters": {
+            "bonusMultiplier": 1
+          },
+          "type": "minecraft:apply_bonus"
+        }
+      ]
+    },
+    {
+      "bonus_rolls": 0.0,
+      "rolls": 1.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "farmersdelight:tomato_seeds"
+        }
+      ],
+      "condition": {
+        "block": "farmersdelight:tomatoes",
+        "properties": {
+          "ropelogged": "false"
+        },
+        "type": "minecraft:block_state_property"
+      }
+    },
+    {
+      "bonus_rolls": 0.0,
+      "rolls": 1.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "farmersdelight:rotten_tomato"
+        }
+      ],
+      "condition": {
+        "type": "minecraft:all_of",
+        "terms": [
+          {
+            "block": "farmersdelight:tomatoes",
+            "properties": {
+              "age": "3"
+            },
+            "type": "minecraft:block_state_property"
+          },
+          {
+            "chance": 0.05,
+            "type": "minecraft:random_chance"
+          }
+        ]
+      }
+    }
+  ],
+  "modifier": [
+    {
+      "type": "minecraft:explosion_decay"
+    }
+  ]
+}

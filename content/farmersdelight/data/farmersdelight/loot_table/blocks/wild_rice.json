@@ -1,0 +1,106 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "rolls": 1.0,
+      "entries": [
+        {
+          "type": "minecraft:alternatives",
+          "children": [
+            {
+              "type": "minecraft:item",
+              "name": "farmersdelight:wild_rice",
+              "condition": {
+                "ability": "shears_harvest",
+                "type": "neoforge:can_item_perform_ability"
+              }
+            },
+            {
+              "type": "minecraft:item",
+              "name": "farmersdelight:rice",
+              "condition": {
+                "type": "minecraft:survives_explosion"
+              }
+            }
+          ]
+        }
+      ],
+      "condition": {
+        "type": "minecraft:all_of",
+        "terms": [
+          {
+            "block": "farmersdelight:wild_rice",
+            "properties": {
+              "half": "lower"
+            },
+            "type": "minecraft:block_state_property"
+          },
+          {
+            "predicate": {
+              "block": {
+                "blocks": "farmersdelight:wild_rice",
+                "state": {
+                  "half": "upper"
+                }
+              }
+            },
+            "offsetY": 1,
+            "type": "minecraft:location_check"
+          }
+        ]
+      }
+    },
+    {
+      "bonus_rolls": 0.0,
+      "rolls": 1.0,
+      "entries": [
+        {
+          "type": "minecraft:alternatives",
+          "children": [
+            {
+              "type": "minecraft:item",
+              "name": "farmersdelight:wild_rice",
+              "condition": {
+                "ability": "shears_harvest",
+                "type": "neoforge:can_item_perform_ability"
+              }
+            },
+            {
+              "type": "minecraft:item",
+              "name": "farmersdelight:rice",
+              "condition": {
+                "type": "minecraft:survives_explosion"
+              }
+            }
+          ]
+        }
+      ],
+      "condition": {
+        "type": "minecraft:all_of",
+        "terms": [
+          {
+            "block": "farmersdelight:wild_rice",
+            "properties": {
+              "half": "upper"
+            },
+            "type": "minecraft:block_state_property"
+          },
+          {
+            "predicate": {
+              "block": {
+                "blocks": "farmersdelight:wild_rice",
+                "state": {
+                  "half": "lower"
+                }
+              }
+            },
+            "offsetY": -1,
+            "type": "minecraft:location_check"
+          }
+        ]
+      }
+    }
+  ],
+  "random_sequence": "farmersdelight:blocks/wild_rice"
+}

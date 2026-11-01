@@ -1,0 +1,723 @@
+[mod]
+id = "farmersdelight_native"
+version = "1.3.4-horizon.9d979ca"
+priority = 300
+
+# Pinned to the Nightly this port is built for (2026-10-31, 9d979ca); the
+# content mod (horizon-mods/farmersdelight) is the same revision's data.
+[compatibility]
+horizon_revision = "9d979caa48a3bb58203319b9ea044db58c38e0d8"
+
+[[module]]
+id = "runtime"
+file = "crates/horizon-client/src/game.rs"
+name = "farmersdelight"
+source = "runtime.rs"
+
+# The block tables of Farmer's Delight's own states and shapes.
+[[module]]
+id = "tables"
+file = "crates/horizon-client/src/mod_content.rs"
+name = "farmersdelight_tables"
+source = "tables.rs"
+
+# A display made between ticks takes its first tick at once.
+[[module]]
+id = "display"
+file = "crates/horizon-client/src/game/text_displays.rs"
+name = "farmersdelight_display"
+source = "display.rs"
+
+# The stove's animateTick, in the client's ambient block effects.
+[[module]]
+id = "animate"
+file = "crates/horizon-client/src/animate_tick.rs"
+name = "farmersdelight_animate"
+source = "stove_animate.rs"
+
+# Rope fences beside changing blocks (their updateShape), read by the game.
+[[module]]
+id = "ropes"
+file = "crates/horizon-client-render/src/world.rs"
+name = "farmersdelight_ropes"
+source = "ropes.rs"
+visibility = "pub"
+
+# NeoForge's creative tab pages, read by the screen in the game crate too.
+[[module]]
+id = "pages"
+file = "crates/horizon-client/src/creative.rs"
+name = "farmersdelight_pages"
+source = "creative_pages.rs"
+visibility = "pub"
+
+# Farmer's Delight's steam particle (SteamParticle), made by the game crate.
+[[module]]
+id = "steam"
+file = "crates/horizon-client-render/src/particles.rs"
+name = "farmersdelight_steam"
+source = "steam.rs"
+visibility = "pub"
+
+[[injection]]
+id = "steam_tick"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client_render::particles::ParticleEngine::tick_particle"
+helper = "steam_tick.rs"
+bindings = [
+  { name = "p", ty = "&mut Particle", value = "&mut *p" },
+  { name = "level", ty = "&ParticleLevel", value = "level" },
+]
+
+# ---- cabinets and baskets (27-slot containers), rope fences
+
+[[injection]]
+id = "container_name"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client_render::containers::default_name_key"
+helper = "container_name.rs"
+bindings = [
+  { name = "block", ty = "&str", value = "block" },
+]
+
+[[injection]]
+id = "container_openers"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client::game::block_entity_anims::Game<'_>::container_openers_changed"
+helper = "container_openers.rs"
+bindings = [
+  { name = "game", ty = "&mut Game<'_>", value = "&mut *self" },
+  { name = "key", ty = "(i32, i32, i32)", value = "key" },
+  { name = "open", ty = "bool", value = "open" },
+]
+
+[[injection]]
+id = "container_sound"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client::game::storage::Game<'_>::container_edge_sound"
+helper = "container_sound.rs"
+bindings = [
+  { name = "game", ty = "&mut Game<'_>", value = "&mut *self" },
+  { name = "key", ty = "(i32, i32, i32)", value = "key" },
+  { name = "open", ty = "bool", value = "open" },
+]
+
+[[injection]]
+id = "rope_changed"
+kind = "HEAD"
+target = "horizon_client_render::world::World::set"
+helper = "rope_changed.rs"
+bindings = [
+  { name = "world", ty = "&World", value = "&*self" },
+  { name = "x", ty = "i32", value = "x" },
+  { name = "y", ty = "i32", value = "y" },
+  { name = "z", ty = "i32", value = "z" },
+  { name = "state", ty = "BlockStateId", value = "state" },
+]
+
+[[injection]]
+id = "rope_now"
+kind = "HEAD"
+target = "horizon_client::game::Game<'_>::process_level_events"
+helper = "rope_now.rs"
+bindings = [
+  { name = "game", ty = "&mut Game<'_>", value = "&mut *self" },
+]
+
+# ---- the skillet (SkilletItem, CopySkilletFunction)
+
+[[injection]]
+id = "skillet_use"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client::game::Game<'_>::use_tool"
+helper = "skillet_use.rs"
+bindings = [
+  { name = "game", ty = "&mut Game<'_>", value = "&mut *self" },
+  { name = "stack", ty = "&ItemStack", value = "stack" },
+  { name = "on_block", ty = "bool", value = "allow_block_actions" },
+]
+
+[[injection]]
+id = "skillet_tick"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client::game::potions::Game<'_>::tick_drinking"
+helper = "skillet_tick.rs"
+bindings = [
+  { name = "game", ty = "&mut Game<'_>", value = "&mut *self" },
+  { name = "slot", ty = "usize", value = "slot" },
+  { name = "ticks", ty = "u32", value = "ticks" },
+  { name = "stack", ty = "&ItemStack", value = "stack" },
+]
+
+[[injection]]
+id = "skillet_release"
+kind = "HEAD"
+target = "horizon_client::game::Game<'_>::release_used_item"
+helper = "skillet_release.rs"
+bindings = [
+  { name = "game", ty = "&mut Game<'_>", value = "&mut *self" },
+  { name = "stack", ty = "&ItemStack", value = "stack" },
+]
+
+[[injection]]
+id = "skillet_start"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client::game::remote::Game<'_>::remote_start_held_use"
+helper = "skillet_start.rs"
+bindings = [
+  { name = "game", ty = "&mut Game<'_>", value = "&mut *self" },
+  { name = "held", ty = "&ItemStack", value = "held" },
+]
+
+[[injection]]
+id = "skillet_held"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client::game::remote::Game<'_>::held_until_released"
+helper = "skillet_held.rs"
+bindings = [
+  { name = "stack", ty = "&ItemStack", value = "stack" },
+]
+
+[[injection]]
+id = "skillet_hit"
+kind = "HEAD"
+target = "horizon_client::game::advancements::Game<'_>::player_hit"
+helper = "skillet_hit.rs"
+bindings = [
+  { name = "game", ty = "&mut Game<'_>", value = "&mut *self" },
+  { name = "kind", ty = "&str", value = "kind" },
+  { name = "direct", ty = "&Option<EntityView>", value = "&direct" },
+]
+
+[[injection]]
+id = "loot_record"
+kind = "HEAD"
+target = "horizon_client::game::spill::Pending::record_saved"
+helper = "loot_record.rs"
+bindings = [
+  { name = "pos", ty = "[i32; 3]", value = "pos" },
+  { name = "tag", ty = "&horizon_world::nbt::Tag", value = "tag" },
+]
+
+[[injection]]
+id = "loot_attach"
+kind = "HEAD"
+target = "horizon_client::game::spill::Pending::attach"
+helper = "loot_attach.rs"
+bindings = [
+  { name = "pos", ty = "[i32; 3]", value = "pos" },
+  { name = "stack", ty = "&mut ItemStack", value = "&mut *stack" },
+]
+
+# ---- the creative screen's pages (NeoForge) and Farmer's Delight's tab
+
+[[injection]]
+id = "tab_position"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client::creative::Creative::tab_position"
+helper = "tab_position.rs"
+bindings = [
+  { name = "tab", ty = "&Tab", value = "tab" },
+]
+
+[[injection]]
+id = "tab_reopen"
+kind = "HEAD"
+target = "horizon_client::creative::Creative::reopen"
+helper = "tab_reopen.rs"
+bindings = [
+  { name = "creative", ty = "&Creative", value = "&*self" },
+]
+
+[[injection]]
+id = "group_key"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client::creative::item_group_key"
+helper = "group_key.rs"
+bindings = [
+  { name = "id", ty = "&str", value = "id" },
+]
+
+[[injection]]
+id = "creative_arm"
+kind = "HEAD"
+target = "horizon_client::game::Game<'_>::draw_creative"
+helper = "creative_arm.rs"
+bindings = []
+
+[[injection]]
+id = "creative_draw"
+kind = "HEAD"
+target = "horizon_client::game::Game<'_>::draw_item"
+helper = "creative_draw.rs"
+bindings = [
+  { name = "game", ty = "&Game<'_>", value = "self" },
+  { name = "batch", ty = "&mut HudBatch", value = "&mut *batch" },
+]
+
+[[injection]]
+id = "creative_click"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client::game::Game<'_>::click_creative"
+helper = "creative_click.rs"
+bindings = [
+  { name = "game", ty = "&mut Game<'_>", value = "&mut *self" },
+  { name = "right", ty = "bool", value = "right" },
+]
+
+[[injection]]
+id = "animate_tick"
+kind = "HEAD"
+target = "horizon_client::animate_tick::block_animate_tick"
+helper = "animate.rs"
+bindings = [
+  { name = "engine", ty = "&mut ParticleEngine", value = "&mut *engine" },
+  { name = "ctx", ty = "&AnimateContext", value = "ctx" },
+  { name = "state", ty = "BlockStateId", value = "state" },
+  { name = "pos", ty = "[i32; 3]", value = "pos" },
+]
+
+# Builds the content root, then lays the Farmer's Delight states out in it.
+[[injection]]
+id = "root"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client::mod_content::resource_root"
+helper = "root.rs"
+bindings = [
+  { name = "base", ty = "&Path", value = "base" },
+  { name = "mods", ty = "&[ContentMod]", value = "mods" },
+  { name = "cache", ty = "&Path", value = "cache" },
+]
+
+# One hand's turn of a right click: Farmer's Delight blocks react first
+# (the cutting board's useItemOn and sneak carving). A pinned raw target (no
+# hook point exists for a block use yet).
+[[injection]]
+id = "use"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client::game::Game<'_>::use_hand"
+helper = "use.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "block_hit", ty = "Option<&Hit>", value = "block_hit" },
+]
+
+# The client's side of a Farmer's Delight block's useItemOn: whether the
+# click swings and ends there.
+[[injection]]
+id = "predict"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client::game::remote::Game<'_>::remote_block_reacts"
+helper = "predict.rs"
+bindings = [
+  { name = "game", ty = "&mut Game<'_>", value = "&mut *self" },
+  { name = "hit", ty = "&super::Hit", value = "hit" },
+  { name = "held", ty = "Option<&ItemStack>", value = "held" },
+]
+
+# The client's prediction of placing a Farmer's Delight block.
+[[injection]]
+id = "predict_place"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client::game::remote::Game<'_>::remote_can_place"
+helper = "predict_place.rs"
+bindings = [
+  { name = "game", ty = "&mut Game<'_>", value = "&mut *self" },
+  { name = "hit", ty = "&super::Hit", value = "hit" },
+  { name = "stack", ty = "&ItemStack", value = "stack" },
+]
+
+# A Farmer's Delight block just placed takes its getStateForPlacement state.
+[[injection]]
+id = "place"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client::game::block_items::Game<'_>::apply_item_block_state"
+helper = "place.rs"
+bindings = [
+  { name = "game", ty = "&mut Game<'_>", value = "&mut *self" },
+  { name = "pos", ty = "[i32; 3]", value = "pos" },
+  { name = "state", ty = "BlockStateId", value = "state" },
+  { name = "stack", ty = "&ItemStack", value = "stack" },
+]
+
+# A removed cutting board drops what it held (CuttingBoardBlock.onRemove).
+[[injection]]
+id = "remove"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client::game::spill::GameLevel<'_>::remove_saved_entity"
+helper = "remove.rs"
+bindings = [
+  { name = "level", ty = "&mut GameLevel<'_>", value = "&mut *self" },
+  { name = "pos", ty = "BlockPos", value = "pos" },
+  { name = "old", ty = "BlockStateId", value = "old" },
+  { name = "side_effects", ty = "bool", value = "side_effects" },
+]
+
+# A lit stove burns what steps on it (AbstractStoveBlock.stepOn), where
+# the game runs MagmaBlock.stepOn.
+[[injection]]
+id = "stove_step"
+kind = "HEAD"
+target = "horizon_client::motion::MotionWorld<'_,'_,'_>::effects_from_blocks"
+helper = "stove_step.rs"
+bindings = [
+  { name = "world", ty = "&mut MotionWorld<'_, '_, '_>", value = "&mut *self" },
+]
+
+# The stove's damage event as a damage type the clients know.
+[[injection]]
+id = "damage_event"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client::lan::containers::Hub::damage_event"
+helper = "damage_event.rs"
+bindings = [
+  { name = "hub", ty = "&Hub", value = "self" },
+  { name = "id", ty = "i32", value = "id" },
+  { name = "kind", ty = "&str", value = "kind" },
+  { name = "cause", ty = "Option<i32>", value = "cause" },
+  { name = "direct", ty = "Option<i32>", value = "direct" },
+  { name = "at", ty = "[f64; 3]", value = "at" },
+]
+
+# ---- the cooking pot's menu (CookingPotMenu) on the server
+
+# A click on a player's pot menu.
+[[injection]]
+id = "pot_click"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client::game::lan_stations::Game<'_>::lan_station_click"
+helper = "pot_click.rs"
+bindings = [
+  { name = "game", ty = "&mut Game<'_>", value = "&mut *self" },
+  { name = "host", ty = "&mut LanHost", value = "&mut *host" },
+  { name = "conn", ty = "u32", value = "conn" },
+  { name = "p", ty = "&play::ContainerClick", value = "p" },
+]
+
+# A player's pot menu closes (its window, or as another menu opens).
+[[injection]]
+id = "pot_closed"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client::game::lan_stations::Game<'_>::lan_station_closed"
+helper = "pot_closed.rs"
+bindings = [
+  { name = "game", ty = "&mut Game<'_>", value = "&mut *self" },
+  { name = "host", ty = "&mut LanHost", value = "&mut *host" },
+  { name = "conn", ty = "u32", value = "conn" },
+  { name = "window", ty = "Option<i32>", value = "window" },
+]
+
+# The pot menus each tick: opened, stillValid, broadcastChanges.
+[[injection]]
+id = "pot_menus"
+kind = "HEAD"
+target = "horizon_client::game::lan_stations::Game<'_>::lan_stations_tick"
+helper = "pot_menus.rs"
+bindings = [
+  { name = "game", ty = "&mut Game<'_>", value = "&mut *self" },
+  { name = "host", ty = "&mut LanHost", value = "&mut *host" },
+]
+
+# ---- the cooking pot's screen (CookingPotScreen) in the window
+
+[[injection]]
+id = "open_screen"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client::game::remote::Game<'_>::remote_open_screen"
+helper = "open_screen.rs"
+bindings = [
+  { name = "game", ty = "&mut Game<'_>", value = "&mut *self" },
+  { name = "p", ty = "&play::OpenScreen", value = "&p" },
+]
+
+[[injection]]
+id = "menu_slot"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client::game::remote::Game<'_>::menu_slot"
+helper = "menu_slot.rs"
+bindings = [
+  { name = "menu", ty = "&str", value = "menu" },
+  { name = "slot", ty = "i32", value = "slot" },
+]
+
+[[injection]]
+id = "menu_ops"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client::game::remote::Game<'_>::remote_menu_ops"
+helper = "menu_ops.rs"
+bindings = [
+  { name = "game", ty = "&mut Game<'_>", value = "&mut *self" },
+  { name = "ops", ty = "&[(Option<usize>, i32, Input)]", value = "ops" },
+]
+
+[[injection]]
+id = "quick_move_all"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client::game::remote::Game<'_>::remote_quick_move_all"
+helper = "quick_move_all.rs"
+bindings = [
+  { name = "game", ty = "&mut Game<'_>", value = "&mut *self" },
+  { name = "slot", ty = "usize", value = "slot" },
+  { name = "moved", ty = "&ItemStack", value = "moved" },
+]
+
+[[injection]]
+id = "station_open"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client::game::remote_stations::Game<'_>::remote_station_open"
+helper = "station_open.rs"
+bindings = [
+  { name = "game", ty = "&Game<'_>", value = "self" },
+  { name = "container", ty = "i32", value = "container" },
+]
+
+[[injection]]
+id = "station_data"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client::game::remote_stations::Game<'_>::remote_station_data"
+helper = "station_data.rs"
+bindings = [
+  { name = "game", ty = "&mut Game<'_>", value = "&mut *self" },
+  { name = "id", ty = "usize", value = "id" },
+  { name = "value", ty = "i16", value = "value" },
+]
+
+[[injection]]
+id = "slot_position"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client::game::machines::Game<'_>::machine_slot_position"
+helper = "slot_position.rs"
+bindings = [
+  { name = "game", ty = "&Game<'_>", value = "self" },
+  { name = "i", ty = "usize", value = "i" },
+]
+
+[[injection]]
+id = "screen_height"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client::game::machines::Game<'_>::screen_height"
+helper = "screen_height.rs"
+bindings = [
+  { name = "game", ty = "&Game<'_>", value = "self" },
+]
+
+[[injection]]
+id = "draw_screen"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client::game::machines::Game<'_>::draw_machine_screen"
+helper = "draw_screen.rs"
+bindings = [
+  { name = "game", ty = "&Game<'_>", value = "self" },
+  { name = "batch", ty = "&mut horizon_client::hud::HudBatch", value = "&mut *batch" },
+  { name = "ox", ty = "f32", value = "ox" },
+  { name = "oy", ty = "f32", value = "oy" },
+]
+
+[[injection]]
+id = "slot_tooltip"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client::game::stations::Game<'_>::draw_slot_tooltip"
+helper = "slot_tooltip.rs"
+bindings = [
+  { name = "game", ty = "&mut Game<'_>", value = "&mut *self" },
+  { name = "batch", ty = "&mut HudBatch", value = "&mut *batch" },
+]
+
+# Hook point: the boards are published from the world's block entities and
+# drawn by the window.
+[[injection]]
+id = "tick"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_tick"
+helper = "tick.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+]
+
+# ---- crops: their bone meal
+
+[[injection]]
+id = "bone_meal"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client::game::growth::Game<'_>::use_bone_meal"
+helper = "bone_meal.rs"
+bindings = [
+  { name = "game", ty = "&mut Game<'_>", value = "&mut *self" },
+  { name = "stack", ty = "&ItemStack", value = "stack" },
+]
+
+[[injection]]
+id = "bone_meal_predict"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client::game::remote::Game<'_>::remote_bone_meal_succeeds"
+helper = "bone_meal_predict.rs"
+bindings = [
+  { name = "game", ty = "&mut Game<'_>", value = "&mut *self" },
+  { name = "hit", ty = "&super::Hit", value = "hit" },
+]
+# ---- canvas signs: their text
+
+[[injection]]
+id = "sign_kind"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client_render::signs::sign_kind"
+helper = "sign_kind.rs"
+bindings = [
+  { name = "name", ty = "&str", value = "name" },
+]
+
+[[injection]]
+id = "sign_classify"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client_render::block_entity_render::classify"
+helper = "sign_classify.rs"
+bindings = [
+  { name = "name", ty = "&str", value = "name" },
+  { name = "prop", ty = "&dyn Fn(&str) -> Option<String>", value = "prop" },
+]
+
+[[injection]]
+id = "sign_entity"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client::lan::chunks::block_entity_type"
+helper = "sign_entity.rs"
+bindings = [
+  { name = "name", ty = "&str", value = "name" },
+]
+# ---- bone meal sparks on the mod's growers, a player's break of a tatami mat
+
+[[injection]]
+id = "growth_particles"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client::game::level_particles::Game<'_>::growth_particles"
+helper = "growth_particles.rs"
+bindings = [
+  { name = "game", ty = "&mut Game<'_>", value = "&mut *self" },
+  { name = "pos", ty = "BlockPos", value = "pos" },
+  { name = "count", ty = "i32", value = "count" },
+]
+
+[[injection]]
+id = "wood_type"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client_render::signs::wood_type"
+helper = "wood_type.rs"
+bindings = [
+  { name = "name", ty = "&str", value = "name" },
+]
+# ---- the window's break of a block holding water leaves the water
+
+[[injection]]
+id = "predict_break"
+kind = "HEAD"
+target = "horizon_client::game::remote::Game<'_>::predict_break"
+helper = "predict_break.rs"
+bindings = [
+  { name = "game", ty = "&mut Game<'_>", value = "&mut *self" },
+  { name = "pos", ty = "[i32; 3]", value = "pos" },
+  { name = "state", ty = "BlockStateId", value = "state" },
+]
+
+[[injection]]
+id = "break_water"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client_render::world::World::set"
+helper = "break_water.rs"
+bindings = [
+  { name = "world", ty = "&mut World", value = "&mut *self" },
+  { name = "x", ty = "i32", value = "x" },
+  { name = "y", ty = "i32", value = "y" },
+  { name = "z", ty = "i32", value = "z" },
+  { name = "state", ty = "BlockStateId", value = "state" },
+]
+
+# ---- the game's stable hook points (native-hooks.json; by target until the
+# launcher's horizon-mixins reads hook names): the mod's crops' random ticks,
+# its blocks' shape updates, a player's break, item tooltips
+
+[[injection]]
+id = "random_tick"
+target = "horizon_client::game::native_hooks::GameLevel<'_>::native_random_tick"
+kind = "HEAD"
+helper = "random_tick.rs"
+bindings = [
+  { name = "level", ty = "&mut GameLevel<'_>", value = "&mut *self" },
+  { name = "ticks", ty = "&mut Ticks", value = "&mut *ticks" },
+  { name = "pos", ty = "BlockPos", value = "pos" },
+  { name = "state", ty = "BlockStateId", value = "state" },
+  { name = "handled", ty = "&mut bool", value = "&mut *handled" },
+]
+
+[[injection]]
+id = "update_shape"
+target = "horizon_client::game::native_hooks::GameLevel<'_>::native_update_shape"
+kind = "HEAD"
+helper = "update_shape.rs"
+bindings = [
+  { name = "level", ty = "&GameLevel<'_>", value = "self" },
+  { name = "pos", ty = "BlockPos", value = "pos" },
+  { name = "state", ty = "BlockStateId", value = "state" },
+  { name = "direction", ty = "Direction", value = "direction" },
+  { name = "neighbour", ty = "BlockStateId", value = "neighbour" },
+  { name = "new", ty = "&mut Option<BlockStateId>", value = "&mut *new" },
+]
+
+[[injection]]
+id = "destroy_block"
+target = "horizon_client::game::native_hooks::Game<'_>::native_destroy_block"
+kind = "HEAD"
+helper = "destroy_block.rs"
+bindings = [
+  { name = "game", ty = "&mut Game<'_>", value = "&mut *self" },
+  { name = "pos", ty = "[i32; 3]", value = "pos" },
+  { name = "canceled", ty = "&mut bool", value = "&mut *canceled" },
+]
+
+[[injection]]
+id = "tooltip"
+target = "horizon_client::game::native_hooks::Game<'_>::native_tooltip"
+kind = "HEAD"
+helper = "tooltip.rs"
+bindings = [
+  { name = "game", ty = "&Game<'_>", value = "self" },
+  { name = "stack", ty = "&ItemStack", value = "stack" },
+  { name = "lines", ty = "&mut Vec<(Text, u32)>", value = "&mut *lines" },
+]

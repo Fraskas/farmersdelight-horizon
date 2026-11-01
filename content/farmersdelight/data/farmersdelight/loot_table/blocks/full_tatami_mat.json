@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "rolls": 1.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "farmersdelight:full_tatami_mat",
+          "condition": {
+            "block": "farmersdelight:full_tatami_mat",
+            "properties": {
+              "part": "head"
+            },
+            "type": "minecraft:block_state_property"
+          }
+        }
+      ],
+      "condition": {
+        "type": "minecraft:survives_explosion"
+      }
+    }
+  ],
+  "random_sequence": "farmersdelight:blocks/full_tatami_mat"
+}
